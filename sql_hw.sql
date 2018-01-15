@@ -184,10 +184,27 @@ WHERE film_id IN
 );
 
 -- 7e. Display the most frequently rented movies in descending order.
+SELECT f.title, COUNT(r.rental_id) AS frequency_rented
+FROM film f
+JOIN inventory i ON f.film_id = i.film_id
+JOIN rental r ON r.inventory_id = i.inventory_id
+GROUP BY f.title
+ORDER BY frequency_rented DESC;
 
 -- 7f. Write a query to display how much business, in dollars, each store brought in.
+SELECT s.store_id, SUM(p.amount) AS total_revenue
+FROM store s
+JOIN inventory i ON i.store_id = s.store_id
+JOIN rental r ON r.inventory_id = i.inventory_id
+JOIN payment p ON p.rental_id = r.rental_id
+GROUP BY s.store_id;
 
 -- 7g. Write a query to display for each store its store ID, city, and country.
+SELECT s.store_id, y.city, r.country
+FROM store s
+JOIN address a ON a.address_id = s.address_id
+JOIN city y ON y.city_id = a.city_id
+JOIN country r ON r.country_id = y.country_id;
 
 -- 7h. List the top five genres in gross revenue in descending order. 
 -- (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
