@@ -112,22 +112,76 @@ USING (film_id)
 GROUP BY film_id;
 
 -- 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
+SELECT title, 
+(
+SELECT COUNT(inventory_id)
+FROM inventory
+WHERE film.film_id = inventory.film_id
+) AS quantity
+FROM film
+WHERE title = 'Hunchback Impossible';
 
 -- 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. 
 -- List the customers alphabetically by last name:
--- ![Total amount paid](Images/total_payment.png)
+SELECT c.first_name, c.last_name, SUM(p.amount) AS total_amount
+FROM customer c LEFT JOIN payment p
+USING (customer_id)
+GROUP BY customer_id
+ORDER BY c.last_name ASC;
 
 -- 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. 
 -- As an unintended consequence, films starting with the letters K and Q have also soared in popularity. 
 -- Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+SELECT * FROM language;
+SELECT * FROM film;
+SELECT title
+FROM film
+WHERE language_id IN 
+(
+  SELECT language_id
+  FROM language
+  WHERE name = 'English'
+)
+AND title LIKE 'K%' 
+OR title LIKE 'Q%';
 
 -- 7b. Use subqueries to display all actors who appear in the film Alone Trip.
+SELECT first_name, last_name
+FROM actor
+WHERE actor_id IN
+(
+  SELECT actor_id
+  FROM film
+  WHERE title = 'Alone Trip'
+);
 
 -- 7c. You want to run an email marketing campaign in Canada, for which you will need the names and email 
 -- addresses of all Canadian customers. Use joins to retrieve this information.
+SELECT c.first_name, c.last_name, c.email
+FROM customer c 
+JOIN address a
+ON c.address_id = a.address_id
+JOIN city y
+ON a.city_id = y.city_id
+JOIN country r
+ON y.country_id = r.country_id
+WHERE country = 'Canada';
 
 -- 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. 
--- Identify all movies categorized as famiy films.
+-- Identify all movies categorized as family films.
+SELECT title
+FROM film
+WHERE film_id IN
+(
+ SELECT film_id 
+ FROM film_category
+ WHERE category_id IN
+ (
+  SELECT category_id
+  FROM category
+  WHERE name = 'Family'
+ )
+);
 
 -- 7e. Display the most frequently rented movies in descending order.
 
