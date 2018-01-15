@@ -98,10 +98,18 @@ ON staff.address_id = address.address_id;
 
 -- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. 
 -- Use tables staff and payment.
-
+SELECT staff_id, SUM(p.amount) AS total_amount, MAX(p.payment_date) As date
+FROM staff s LEFT JOIN payment p
+USING (staff_id)
+WHERE p.payment_date LIKE '2005-05%'
+GROUP BY staff_id;
 
 -- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. 
 -- Use inner join.
+SELECT f.title, COUNT(a.actor_id) AS number_of_actors
+FROM film f INNER JOIN film_actor a
+USING (film_id)
+GROUP BY film_id;
 
 -- 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
 
