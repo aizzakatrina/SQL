@@ -77,6 +77,8 @@ SET first_name = 'MUCHO GROUCHO'
 WHERE actor_id = 172;
 
 -- 5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
+SHOW CREATE TABLE address;
+-- or 
 CREATE TABLE address (
 address_id INTEGER(11) AUTO_INCREMENT NOT NULL,
 address VARCHAR(50) NOT NULL,
